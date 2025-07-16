@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dog Breed Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fceabb, #f8b500);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #f08a24;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    select,
+    button {
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    select {
+      background-color: #f3f3f3;
+    }
+
+    button {
+      background-color: #f08a24;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #d46d00;
+    }
+
+    #dogImage {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    #dogImage img {
+      border-radius: 10px;
+      height: 200px;
+      width: 200px;
+      object-fit: cover;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    #dogImage img:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      select,
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🐶 Dog Breed Image Viewer</h1>
+    <div class="controls">
+      <select>
+        <option value="">-- Select Breed --</option>
+      </select>
+      <button>Show Images</button>
+    </div>
+    <div id="dogImage"></div>
+  </div>
+
+  <script>
+    let select = document.querySelector('select');
+
+    fetch("https://dog.ceo/api/breeds/list/all")
+      .then(res => res.json())
+      .then(data => {
+        let breedList = Object.keys(data.message)
+        breedList.forEach(breed => {
+          let option = document.createElement('option');
+          option.setAttribute('value', breed);
+          option.innerHTML = breed
+          select.append(option)
+        })
+      })
+      .catch(err => console.log(err));
+
+    document.querySelector('button').addEventListener("click", () => {
+      if (select.value == "") {
+        alert("Please select Breed");
+        return;
+      }
+      fetch(`https://dog.ceo/api/breed/${select.value}/images`)
+        .then(res => res.json())
+        .then(data => {
+          let dogImages = data.message;
+          dogImages.forEach(dog => {
+            let img = document.createElement('img');
+            img.setAttribute('src', dog)
+            img.setAttribute('height', "200px")
+            img.setAttribute('width', "200px")
+            img.style.margin = "10px"
+            document.querySelector("#dogImage").prepend(img);
+          })
+        })
+        .catch(err => console.log(err));
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <div>
+        <button>Click Here</button>
+    </div>
+    <div id="dog-img"></div>
+
+    <script>
+        document.querySelector('button').addEventListener("click",() => {
+            fetch("https://images.dog.ceo/breeds/malinois/n02105162_6134.jpg")
+            .then(res => res.json())
+            .then(data => {
+                let img = document.createElement('img');
+                img.setAttribute('src',data.message)
+                document.querySelector('#dog-img').append(img)
+            })
+            .catch(err => console.log(err.message));
+
+            document.querySelector('button').addEventListener("click", () => {
+                if (select.value == ""){
+                    alert("Please select an option");
+                    return;
+                }
+                fetch("https://dog.ceo/api/breed/" + select.value + "/images/random")
+                .then(res => res.json())
+                .then(data => {
+                    let dogImages = data.message;
+                    dogImages.foreach(dog => {
+                        let img = document.createElement('img');
+                        img.setAttribute('src', dog);
+                    })
+                })
+            })
+            .catch(err => console.log(err));
+        })
+    </script>
+
+</body>
+</html>
